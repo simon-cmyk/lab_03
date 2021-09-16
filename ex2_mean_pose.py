@@ -18,7 +18,7 @@ def draw_random_poses(mean_pose, cov_pose, n=100):
     poses = np.full(n, mean_pose, dtype=object)
 
     # Draw random tangent space vectors.
-    random_xsis = np.random.multivariate_normal(np.zeros(6), cov_pose, n).T
+    random_xis = np.random.multivariate_normal(np.zeros(6), cov_pose, n).T
 
     # TODO 1: Perturb the mean pose with each of the random tangent space vectors.
     for i in range(n):
@@ -42,13 +42,13 @@ def compute_mean_pose(poses, conv_thresh=1e-14, max_iters=20):
 
     for it in range(max_iters):
         # TODO 2: Compute the mean tangent vector in the tangent space at the current estimate.
-        mean_xsi = np.zeros((6, 1))  # Mock implementation, do something more!
+        mean_xi = np.zeros((6, 1))  # Mock implementation, do something more!
 
         # TODO 3: Update the estimate.
         mean_pose = SE3() # Mock implementation, do something else!
 
         # Stop if the update is small.
-        if np.linalg.norm(mean_xsi) < conv_thresh:
+        if np.linalg.norm(mean_xi) < conv_thresh:
             break
 
     return mean_pose

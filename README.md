@@ -7,6 +7,7 @@ I have made the following scripts:
 - [ex1_interpolation.py](ex1_interpolation.py)
 - [ex2_mean_pose.py](ex2_mean_pose.py)
 - [ex3_noise_propagation.py](ex3_noise_propagation.py)
+- [ex4_distributions.py](ex4_distributions.py)
 
 Your task this week is to finish these scripts, and then experiment with them to get a better understanding of how Lie theory can be used to work with poses on the manifold.
 See the sections below for details.
@@ -52,3 +53,11 @@ For hints, see Examples 6.19 in the compendium.
 - Play around with different distribution parameters.
   Try for example to increase the uncertainty in the camra rotation around the y-axis to a large value (0.2 for example).
 - When is this first order approximation to the distribution a good approximation? When is it bad?
+
+
+## Exercise 4 - Experimenting with distributions on the manifold
+Play with distributions on the _SE_(2) manifold and experience how the look like in the plane.
+
+- Open [ex4_distributions.py](ex4_distributions.py).
+- Test different expected poses and covariances
+- Try propagating distributions through the inverse, compositions and the relative pose
