@@ -23,11 +23,18 @@ Using [pylie](https://github.com/tussedrotten/pylie), we can quite easily implem
 For hints, see Example 4.8 in the compendium.
 
 - Open [ex1_interpolation.py](ex1_interpolation.py).
-- Implement linear interpolation on the manifold (see TODO 1)
+- Implement linear interpolation on the manifold (see TODO 1) 
 - Play around with different poses and see how the interpolation is performed
 - Try extrapolating
 - Instead of interpolating on the pose manifold, try instead to interpolate the rotation and translation parts separately.
   How does this procedure compare to the full pose interpolation?
+
+  Easy to interpolate using Manifold + and -
+
+  When combining for the pose you get the interaction leading to screw motion, as in picture ![alt text](image.png).
+  One can not just move along the straightest path.
+  
+  Extrapolating this effect gets even more obvious ![alt text](image-1.png)
   
 
 ## Exercise 2 - Estimate the mean pose from a set of random poses
