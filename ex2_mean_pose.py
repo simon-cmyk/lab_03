@@ -21,9 +21,8 @@ def draw_random_poses(mean_pose, cov_pose, n=100):
     random_xis = np.random.multivariate_normal(np.zeros(6), cov_pose, n).T
 
     # TODO 1: Perturb the mean pose with each of the random tangent space vectors.
-    for i in range(n):
-        poses[i] = poses[i]  # Mock implementation, do something else!
-
+    for i, eps in enumerate(random_xis.T):
+        poses[i] = poses[i] + eps.reshape(6,1)
     return poses
 
 
@@ -42,10 +41,10 @@ def compute_mean_pose(poses, conv_thresh=1e-14, max_iters=20):
 
     for it in range(max_iters):
         # TODO 2: Compute the mean tangent vector in the tangent space at the current estimate.
-        mean_xi = np.zeros((6, 1))  # Mock implementation, do something more!
+        mean_xi = 1 / num_poses * sum([pose - mean_pose for pose in poses])
 
         # TODO 3: Update the estimate.
-        mean_pose = SE3() # Mock implementation, do something else!
+        mean_pose = mean_pose + mean_xi 
 
         # Stop if the update is small.
         if np.linalg.norm(mean_xi) < conv_thresh:
@@ -57,10 +56,10 @@ def compute_mean_pose(poses, conv_thresh=1e-14, max_iters=20):
 def main():
     # Define the pose distribution.
     mean_pose = SE3()
-    cov_pose = np.diag(np.array([0.1, 0.1, 0.1, 0.1, 0.1, 0.4]) ** 2)
+    cov_pose = np.diag(np.array([0.05, 0.05, 0.05, 0.1, 0.1, 0.2]) **2)
 
     # Draw random poses from this distribution.
-    poses = draw_random_poses(mean_pose, cov_pose)
+    poses = draw_random_poses(mean_pose, cov_pose, n=50)
 
     # Estimate the mean pose from the random poses.
     estimated_mean_pose = compute_mean_pose(poses)

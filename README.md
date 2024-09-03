@@ -19,6 +19,7 @@ pip install -r requirements.txt
 ```
 
 ## Exercise 1 - Linear interpolation of poses on the manifold
+
 Using [pylie](https://github.com/tussedrotten/pylie), we can quite easily implement linear interpolation for poses on the manifold.
 For hints, see Example 4.8 in the compendium.
 
@@ -38,6 +39,7 @@ For hints, see Example 4.8 in the compendium.
   
 
 ## Exercise 2 - Estimate the mean pose from a set of random poses
+
 We will here draw poses from a distribution, and try to recover the mean pose by estimating it on the manifold.
 For hints, see Examples 6.17 and 7.20 in the compendium. 
 
@@ -45,11 +47,17 @@ For hints, see Examples 6.17 and 7.20 in the compendium.
 - Finish `draw_random_poses()` (see TODO 1)
 - Study algorithm 2 in Example 7.20 in the compendium.
 - Finish `compute_mean_pose()` (see TODOs 2 and 3)
+![alt text](image-2.png)
 - Play around with different distribution parameters.
   Try for example to increase the uncertainty in the rotation around the y-axis.
-  
 
+  ![alt text](image-3.png)
+
+  The covariance should be squared in example 6.17 in the compendium.
+  Or else my code is wrong. ![alt text](image-4.png)
+  
 ## Exercise 3 - Propagating uncertainty in backprojection
+
 We will here estimate the distribution of an observed 3D point in the world, based on uncertainties in measured camera pose, pixel position, and depth. 
 For hints, see Examples 6.19 in the compendium. 
 
@@ -63,6 +71,7 @@ For hints, see Examples 6.19 in the compendium.
 
 
 ## Exercise 4 - Experimenting with distributions on the manifold
+
 Play with distributions on the _SE_(2) manifold and experience how the look like in the plane.
 
 - Open [ex4_distributions.py](ex4_distributions.py).
