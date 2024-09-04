@@ -90,28 +90,129 @@ class MultivariateNormalParameters:
     mean: Any
     covariance: np.ndarray
 
-
 def main():
     # TODO: Play around with different distributions.
     # TODO: Try propagating through inverese, composistion, relative element.
-    T_ab = SE2((SO2(), np.array([[4], [0]])))
-    Sigma_a_ab = np.array([[0.1, 0.00, 0.00], [0.00, 2, 0.4], [0.00, 0.4, 0.1]])
+
+    ########### Inverse
+    T_ab = SE2((SO2(np.pi/4), np.array([[2], [0]])))
+
+    Sigma_a_ab = np.array([[0.1, 0.00, 0.00], [0.00, 2, 0.8], [0.00, 0.4, 0.1]])
     T_ab_dist = MultivariateNormalParameters(T_ab, Sigma_a_ab)
+
+    T_ba = T_ab.inverse()
+    Sigma_b_ba = T_ab.inverse().adjoint() @ Sigma_a_ab @ T_ab.inverse().adjoint().T
+    T_ba_dist = MultivariateNormalParameters(T_ba, Sigma_b_ba)
 
     # Plot
     matplotlib.use('qt5agg')
-    plt.figure()
-    ax = plt.axes()
 
-    plot_se2_covariance_on_manifold(ax, T_ab_dist, chi2_val=7.815, n=50, fill_color='green', fill_alpha=0.1)
-    plot_se2_covariance_on_manifold(ax, T_ab_dist, chi2_val=4.108, n=50, fill_color='green', fill_alpha=0.1)
-    plot_se2_covariance_on_manifold(ax, T_ab_dist, chi2_val=1.213, n=50, fill_color='green', fill_alpha=0.1)
-    plot_2d_frame(ax, T_ab_dist.mean.to_tuple(), scale=0.5, text='$\\mathcal{F}_b$')
-    plot_2d_frame(ax, SE2().to_tuple(), scale=0.5, text='$\\mathcal{F}_a$')
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+    
+    plot_se2_covariance_on_manifold(ax1, T_ab_dist, chi2_val=7.815, n=50, fill_color='green', fill_alpha=0.1)
+    plot_se2_covariance_on_manifold(ax1, T_ab_dist, chi2_val=4.108, n=50, fill_color='green', fill_alpha=0.1)
+    plot_se2_covariance_on_manifold(ax1, T_ab_dist, chi2_val=1.213, n=50, fill_color='green', fill_alpha=0.1)
+    plot_2d_frame(ax1, T_ab_dist.mean.to_tuple(), scale=0.5, text='$\\mathcal{F}_b$')
+    plot_2d_frame(ax1, SE2().to_tuple(), scale=0.5, text='$\\mathcal{F}_a$')
+
+    plot_se2_covariance_on_manifold(ax2, T_ba_dist, chi2_val=7.815, n=50, fill_color='green', fill_alpha=0.1)
+    plot_se2_covariance_on_manifold(ax2, T_ba_dist, chi2_val=4.108, n=50, fill_color='green', fill_alpha=0.1)
+    plot_se2_covariance_on_manifold(ax2, T_ba_dist, chi2_val=1.213, n=50, fill_color='green', fill_alpha=0.1)
+    plot_2d_frame(ax2, T_ba_dist.mean.to_tuple(), scale=0.5, text='$\\mathcal{F}_a$')
+    plot_2d_frame(ax2, SE2().to_tuple(), scale=0.5, text='$\\mathcal{F}_b$')
+    ax1.set_title('T_ab')
+    ax2.set_title('T_ba')
 
     plt.axis('equal')
     plt.show()
 
+    ########### Composition
+
+    T_ab = SE2((SO2(np.pi/4), np.array([[2], [0]])))
+    T_bc = SE2((SO2(np.pi/3), np.array([[-1], [1]])))
+    Sigma_a_ab = np.array([[0.1, 0.00, 0.00], [0.00, 2, 0.8], [0.00, 0.4, 0.1]])
+    Sigma_b_bc = np.array([[0.2, 0.00, 0.00], [0.00, 1, 0.3], [0.00, 0.3, 0.3]])
+    
+    T_ab_dist = MultivariateNormalParameters(T_ab, Sigma_a_ab)
+    T_bc_dist = MultivariateNormalParameters(T_bc, Sigma_b_bc)
+
+    Sigma_ab_bc = np.array([[0.1, 0.01, 0.00], [0.01, 0.2, 0.9], [0.00, 0.1, 0.6]])
+
+    T_ac = T_ab.compose(T_bc) 
+    Sigma_c_ac = T_bc.inverse().adjoint() @ Sigma_a_ab @ T_bc.inverse().adjoint().T \
+    + Sigma_b_bc
+    + T_bc.inverse().adjoint() @ Sigma_ab_bc \
+    + Sigma_ab_bc.T @ T_bc.inverse().adjoint().T
+    
+    T_ac_dist = MultivariateNormalParameters(T_ac, Sigma_c_ac)
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+    
+    plot_se2_covariance_on_manifold(ax1, T_ab_dist, chi2_val=7.815, n=50, fill_color='green', fill_alpha=0.1)
+    plot_se2_covariance_on_manifold(ax1, T_ab_dist, chi2_val=4.108, n=50, fill_color='green', fill_alpha=0.1)
+    plot_se2_covariance_on_manifold(ax1, T_ab_dist, chi2_val=1.213, n=50, fill_color='green', fill_alpha=0.1)
+    plot_2d_frame(ax1, T_ab_dist.mean.to_tuple(), scale=0.5, text='$\\mathcal{F}_b$')
+    
+    plot_se2_covariance_on_manifold(ax1, T_bc_dist, chi2_val=7.815, n=50, fill_color='green', fill_alpha=0.1)
+    plot_se2_covariance_on_manifold(ax1, T_bc_dist, chi2_val=4.108, n=50, fill_color='green', fill_alpha=0.1)
+    plot_se2_covariance_on_manifold(ax1, T_bc_dist, chi2_val=1.213, n=50, fill_color='green', fill_alpha=0.1)
+    plot_2d_frame(ax1, T_bc_dist.mean.to_tuple(), scale=0.5, text='$\\mathcal{F}_c$')
+    plot_2d_frame(ax1, SE2().to_tuple(), scale=0.5, text='$\\mathcal{F}_a$')
+
+    plot_se2_covariance_on_manifold(ax2, T_ac_dist, chi2_val=7.815, n=50, fill_color='green', fill_alpha=0.1)
+    plot_se2_covariance_on_manifold(ax2, T_ac_dist, chi2_val=4.108, n=50, fill_color='green', fill_alpha=0.1)
+    plot_se2_covariance_on_manifold(ax2, T_ac_dist, chi2_val=1.213, n=50, fill_color='green', fill_alpha=0.1)
+    plot_2d_frame(ax2, T_ac_dist.mean.to_tuple(), scale=0.5, text='$\\mathcal{F}_c$')
+    plot_2d_frame(ax2, SE2().to_tuple(), scale=0.5, text='$\\mathcal{F}_a$')
+    ax1.set_title('$T_{ab}$ and $T_{bc}$')
+    ax2.set_title('$T_{ac}$')
+
+    plt.axis('equal')
+    plt.show()
+
+    ########### Relative
+
+    T_ab = SE2((SO2(np.pi/4), np.array([[2], [0]])))
+    T_ac = SE2((SO2(-np.pi/3), np.array([[1], [1]])))
+    Sigma_a_ab = np.array([[0.1, 0.00, 0.00], [0.00, 2, 0.8], [0.00, 0.4, 0.1]])
+    Sigma_a_ac = np.array([[0.2, 0.00, 0.00], [0.00, 1, 0.3], [0.00, 0.3, 0.3]])
+    
+    T_ab_dist = MultivariateNormalParameters(T_ab, Sigma_a_ab)
+    T_ac_dist = MultivariateNormalParameters(T_ac, Sigma_a_ac)
+
+    Sigma_ab_ac = np.array([[0.1, 0.01, 0.00], [0.01, 0.2, 0.9], [0.00, 0.1, 0.6]])
+
+    T_bc = T_ab.inverse().compose(T_ac) 
+    Sigma_b_bc = T_bc.inverse().adjoint() @ Sigma_a_ab @ T_bc.inverse().adjoint().T \
+    + Sigma_a_ac
+    + T_bc.inverse().adjoint() @ Sigma_ab_ac \
+    + Sigma_ab_ac.T @ T_bc.inverse().adjoint().T
+    
+    T_bc_dist = MultivariateNormalParameters(T_bc, Sigma_b_bc)
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+    
+    plot_se2_covariance_on_manifold(ax1, T_ab_dist, chi2_val=7.815, n=50, fill_color='green', fill_alpha=0.1)
+    plot_se2_covariance_on_manifold(ax1, T_ab_dist, chi2_val=4.108, n=50, fill_color='green', fill_alpha=0.1)
+    plot_se2_covariance_on_manifold(ax1, T_ab_dist, chi2_val=1.213, n=50, fill_color='green', fill_alpha=0.1)
+    plot_2d_frame(ax1, T_ab_dist.mean.to_tuple(), scale=0.5, text='$\\mathcal{F}_b$')
+    
+    plot_se2_covariance_on_manifold(ax1, T_ac_dist, chi2_val=7.815, n=50, fill_color='green', fill_alpha=0.1)
+    plot_se2_covariance_on_manifold(ax1, T_ac_dist, chi2_val=4.108, n=50, fill_color='green', fill_alpha=0.1)
+    plot_se2_covariance_on_manifold(ax1, T_ac_dist, chi2_val=1.213, n=50, fill_color='green', fill_alpha=0.1)
+    plot_2d_frame(ax1, T_ac_dist.mean.to_tuple(), scale=0.5, text='$\\mathcal{F}_c$')
+    plot_2d_frame(ax1, SE2().to_tuple(), scale=0.5, text='$\\mathcal{F}_a$')
+
+    plot_se2_covariance_on_manifold(ax2, T_bc_dist, chi2_val=7.815, n=50, fill_color='green', fill_alpha=0.1)
+    plot_se2_covariance_on_manifold(ax2, T_bc_dist, chi2_val=4.108, n=50, fill_color='green', fill_alpha=0.1)
+    plot_se2_covariance_on_manifold(ax2, T_bc_dist, chi2_val=1.213, n=50, fill_color='green', fill_alpha=0.1)
+    plot_2d_frame(ax2, T_bc_dist.mean.to_tuple(), scale=0.5, text='$\\mathcal{F}_c$')
+    plot_2d_frame(ax2, SE2().to_tuple(), scale=0.5, text='$\\mathcal{F}_b$')
+    ax1.set_title('$T_{ab}$ and $T_{ac}$')
+    ax2.set_title('$T_{bc}$')
+
+    plt.axis('equal')
+    plt.show()
 
 if __name__ == "__main__":
     main()

@@ -91,3 +91,18 @@ Play with distributions on the _SE_(2) manifold and experience how the look like
 - Open [ex4_distributions.py](ex4_distributions.py).
 - Test different expected poses and covariances
 - Try propagating distributions through the inverse, compositions and the relative pose
+
+The inverse \\
+![alt text](image-7.png)
+
+The composition \\
+
+![](image-8.png)
+Probably wrong
+
+
+The relative pose \\
+
+![alt text](image-9.png)
+
+From VSLAM-handbook.  
