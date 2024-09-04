@@ -56,7 +56,7 @@ def compute_mean_pose(poses, conv_thresh=1e-14, max_iters=20):
 def main():
     # Define the pose distribution.
     mean_pose = SE3()
-    cov_pose = np.diag(np.array([0.05, 0.05, 0.05, 0.1, 0.1, 0.2]) **2)
+    cov_pose = np.diag(np.array([0.05, 0.05, 0.05, 0.1, 0.1, 0.2])**2)
 
     # Draw random poses from this distribution.
     poses = draw_random_poses(mean_pose, cov_pose, n=50)
