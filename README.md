@@ -72,13 +72,17 @@ For hints, see Examples 6.19 in the compendium.
 
 - Play around with different distribution parameters.
   Try for example to increase the uncertainty in the camera rotation around the y-axis to a large value (0.2 for example).
-  
+
 ![alt text](image-6.png)
 This leads to a very large uncertainty in the backprojection. But the approximation is not that good. Since it curves. There are coupling effects between the rotation and the translation.
 
 
 - When is this first order approximation to the distribution a good approximation? When is it bad?
 When the jacobian is non singular. Or when the Hessian is approximated by the Jacobian.T @ Jacobian. This happens close to the minimum of the function.
+
+### Bonus task Implement Unscented Kalman Filter for the backprojection
+
+Gave up :( for now
 
 ## Exercise 4 - Experimenting with distributions on the manifold
 
