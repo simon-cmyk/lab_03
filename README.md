@@ -82,7 +82,10 @@ When the jacobian is non singular. Or when the Hessian is approximated by the Ja
 
 ### Bonus task Implement Unscented Kalman Filter for the backprojection
 
-Gave up :( for now
+The approximation is not that accurate, so in order to improve it we use the unscented transform to propagate the distribution through the backprojection.
+Here is the result, as seen this approximation becomes better
+
+![alt text](image-11.png)
 
 ## Exercise 4 - Experimenting with distributions on the manifold
 
