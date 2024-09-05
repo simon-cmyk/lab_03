@@ -183,6 +183,7 @@ def main():
     # Show figure.
     vg.plot.axis_equal(ax)
     plt.legend(['Estimated cov ellipsoid', 'Simulated cov ellipsoid', 'Unscented transform cov ellipsoid'])
+    ax.set_title(r'unscented transform with $\alpha=0.75$, $\beta=2$, $\kappa=20$')
     plt.show()
 
 
